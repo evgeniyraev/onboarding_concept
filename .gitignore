@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# XcodeGen output (regenerate with `xcodegen generate`)
+/ConceptsOnboarding.xcodeproj/
+
+# Xcode build output
+.DerivedData/
+DerivedData/
+build/
+*.xcarchive
+*.dSYM
+*.dSYM.zip
+
+# Xcode user-specific state
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager build output
+.build/
