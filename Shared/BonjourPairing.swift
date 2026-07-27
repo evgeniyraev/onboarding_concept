@@ -7,7 +7,14 @@ private enum PairingNetworkConfiguration {
     static func tcpParameters() -> NWParameters {
         let parameters = NWParameters.tcp
         parameters.includePeerToPeer = true
+        parameters.preferNoProxies = true
         parameters.allowLocalEndpointReuse = true
+#if os(watchOS)
+        // A physical Watch normally prefers the paired iPhone's IPsec proxy.
+        // Bonjour service endpoints cannot be opened through that proxy, so
+        // require a direct Wi-Fi/AWDL path for cross-device local pairing.
+        parameters.requiredInterfaceType = .wifi
+#endif
         return parameters
     }
 }
@@ -364,6 +371,10 @@ final class BonjourChildBrowser: ObservableObject {
         record("Starting child browser as “\(displayName)”")
         record("Searching for Bonjour type: \(BonjourService.type)")
         record("Peer-to-peer discovery: enabled")
+        record("System proxy routing: disabled")
+#if os(watchOS)
+        record("Direct Wi-Fi/peer-to-peer path: required")
+#endif
         recordBonjourDeclaration()
         startPathMonitor()
 
@@ -384,7 +395,7 @@ final class BonjourChildBrowser: ObservableObject {
             case .waiting(let error):
                 self.record("Browser state: waiting — \(error)")
                 self.publishStatus(
-                    .failed("Waiting for local network: \(error.localizedDescription)")
+                    .failed(Self.localNetworkFailureMessage(for: error))
                 )
             case .ready:
                 self.record("Browser state: ready")
@@ -464,7 +475,7 @@ final class BonjourChildBrowser: ObservableObject {
                 self.record("Parent connection state: preparing")
             case .waiting(let error):
                 self.record("Parent connection state: waiting — \(error)")
-                self.publishStatus(.failed(error.localizedDescription))
+                self.publishStatus(.failed(Self.localNetworkFailureMessage(for: error)))
             case .ready:
                 self.record(
                     "Parent connection state: ready via \(Self.pathDescription(connection.currentPath))"
@@ -630,6 +641,14 @@ final class BonjourChildBrowser: ObservableObject {
             return "Parent iPhone"
         }
         return name
+    }
+
+    private static func localNetworkFailureMessage(for error: NWError) -> String {
+#if os(watchOS)
+        "Connect this Watch and the parent iPhone to the same Wi-Fi network, then try again. \(error.localizedDescription)"
+#else
+        "Waiting for local network: \(error.localizedDescription)"
+#endif
     }
 
     private static func timeString() -> String {

@@ -3,7 +3,6 @@ import SwiftUI
 struct AdultDashboardView: View {
     let onLogout: () -> Void
     @State private var showingDiscovery = false
-    @State private var showingLogout = false
 
     var body: some View {
         NavigationStack {
@@ -34,7 +33,7 @@ struct AdultDashboardView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button("Log out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) {
-                            showingLogout = true
+                            onLogout()
                         }
                     } label: {
                         Image(systemName: "person.crop.circle.fill")
@@ -44,9 +43,6 @@ struct AdultDashboardView: View {
             }
             .sheet(isPresented: $showingDiscovery) {
                 ParentDiscoveryView()
-            }
-            .confirmationDialog("Log out of the adult dashboard?", isPresented: $showingLogout) {
-                Button("Log out", role: .destructive, action: onLogout)
             }
         }
     }

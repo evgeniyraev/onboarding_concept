@@ -42,7 +42,7 @@ xcodegen generate
 
 Install the `ConceptsOnboarding` iPhone app first; it embeds the companion Watch app. Then run `OrbitFamilyWatch` on the Apple Watch if Xcode did not install it automatically. Bonjour is best exercised on physical iPhones; simulators may not mirror all local-network permission and multicast behavior.
 
-Before installing on physical devices, choose the same Apple Developer team under **Signing & Capabilities** for both app targets. The parent iPhone and child Watch can use different Apple IDs, but both apps must be open with local-network access while pairing.
+Before installing on physical devices, choose the same Apple Developer team under **Signing & Capabilities** for both app targets. The parent iPhone and child Watch can use different Apple IDs, but both apps must be open with local-network access while pairing. For the most reliable cross-account Watch pairing, connect both devices to the same Wi-Fi network.
 
 ## Diagnostics
 
