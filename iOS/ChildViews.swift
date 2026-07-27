@@ -54,7 +54,7 @@ struct ChildPairingView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
 
-                        if DiagnosticsConfiguration.isEnabled {
+                        if FeatureConfiguration.isDiagnosticsEnabled {
                             DisclosureGroup {
                                 VStack(alignment: .leading, spacing: 5) {
                                     ForEach(Array(host.diagnostics.suffix(12).enumerated()), id: \.offset) { _, line in

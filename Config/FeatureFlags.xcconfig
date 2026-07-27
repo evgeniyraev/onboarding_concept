@@ -1,0 +1,3 @@
+// Shared feature flags for the iOS and watchOS apps.
+ORBIT_NEARBY_INTERACTION_ENABLED = NO
+ORBIT_DIAGNOSTICS_ENABLED = NO

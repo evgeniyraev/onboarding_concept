@@ -38,7 +38,7 @@ struct WatchChildPairingView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
 
-                if DiagnosticsConfiguration.isEnabled {
+                if FeatureConfiguration.isDiagnosticsEnabled {
                     VStack(alignment: .leading, spacing: 3) {
                         Label("Pairing diagnostics", systemImage: "waveform.path.ecg")
                             .font(.caption2.bold())

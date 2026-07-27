@@ -32,6 +32,10 @@
 	<string>Orbit Family uses your local network to find and pair with nearby family devices.</string>
 	<key>NSNearbyInteractionUsageDescription</key>
 	<string>Orbit Family measures how close the family devices are to confirm the nearby pairing.</string>
+	<key>OrbitNearbyInteractionEnabled</key>
+	<string>$(ORBIT_NEARBY_INTERACTION_ENABLED)</string>
+	<key>OrbitDiagnosticsEnabled</key>
+	<string>$(ORBIT_DIAGNOSTICS_ENABLED)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -22,6 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSNearbyInteractionUsageDescription</key>
 	<string>Orbit Family measures how close the family devices are to confirm the nearby pairing.</string>
+	<key>OrbitNearbyInteractionEnabled</key>
+	<string>$(ORBIT_NEARBY_INTERACTION_ENABLED)</string>
+	<key>OrbitDiagnosticsEnabled</key>
+	<string>$(ORBIT_DIAGNOSTICS_ENABLED)</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_orbitparent._tcp</string>

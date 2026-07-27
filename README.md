@@ -23,6 +23,15 @@ A native SwiftUI iOS + watchOS demo of local Bonjour discovery and pairing.
 - Devices without Nearby Interaction support continue over their active Bonjour or WatchConnectivity transport
 - No cloud service, account backend, or internet connection is used
 
+Nearby Interaction and diagnostics are controlled for both apps in
+`Config/FeatureFlags.xcconfig`:
+
+- `ORBIT_NEARBY_INTERACTION_ENABLED` controls ranging and token exchange.
+- `ORBIT_DIAGNOSTICS_ENABLED` controls diagnostic logging and panels.
+
+Both flags default to `NO`. Change a value and rebuild to apply it; Bonjour and
+WatchConnectivity pairing remain available when Nearby Interaction is disabled.
+
 ## Open and run
 
 Open `ConceptsOnboarding.xcodeproj` after generating it with:
@@ -42,4 +51,7 @@ Each app has a normal scheme and a diagnostics scheme:
 - `ConceptsOnboarding` / `ConceptsOnboarding Diagnostics`
 - `OrbitFamilyWatch` / `OrbitFamilyWatch Diagnostics`
 
-The diagnostics schemes set `ORBIT_DIAGNOSTICS_ENABLED=1` in the Run, Test, and Profile environment. The normal schemes set it to `0`. When the flag is disabled, the app does not collect or emit pairing diagnostics and the diagnostics panels are hidden.
+The diagnostics schemes override `ORBIT_DIAGNOSTICS_ENABLED` to `1` in the Run,
+Test, and Profile environment. Normal schemes use the value from
+`Config/FeatureFlags.xcconfig`. When the flag is disabled, the app does not
+collect or emit pairing diagnostics and the diagnostics panels are hidden.

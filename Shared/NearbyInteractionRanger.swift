@@ -21,6 +21,12 @@ final class NearbyInteractionRanger: NSObject, NISessionDelegate {
     func start(sendToken: (Data) -> Void) {
         stop()
 
+        guard FeatureConfiguration.isNearbyInteractionEnabled else {
+            onDiagnostic("Nearby Interaction disabled by build configuration")
+            onStatusChange(.unavailable)
+            return
+        }
+
         guard NISession.deviceCapabilities.supportsPreciseDistanceMeasurement else {
             onDiagnostic("Nearby Interaction unavailable on this device")
             onStatusChange(.unavailable)

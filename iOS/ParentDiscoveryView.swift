@@ -20,7 +20,7 @@ struct ParentDiscoveryView: View {
                     VStack(spacing: 22) {
                         statusHero
                         content
-                        if DiagnosticsConfiguration.isEnabled {
+                        if FeatureConfiguration.isDiagnosticsEnabled {
                             diagnosticsCard
                         }
                     }

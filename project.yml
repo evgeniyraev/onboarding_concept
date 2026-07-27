@@ -19,6 +19,9 @@ targets:
   ConceptsOnboarding:
     type: application
     platform: iOS
+    configFiles:
+      Debug: Config/FeatureFlags.xcconfig
+      Release: Config/FeatureFlags.xcconfig
     sources:
       - path: Shared
       - path: iOS
@@ -36,6 +39,9 @@ targets:
   OrbitFamilyWatch:
     type: application
     platform: watchOS
+    configFiles:
+      Debug: Config/FeatureFlags.xcconfig
+      Release: Config/FeatureFlags.xcconfig
     sources:
       - path: Shared
       - path: watchOS
@@ -65,18 +71,12 @@ schemes:
         ConceptsOnboarding: all
     run:
       config: Debug
-      environmentVariables:
-        ORBIT_DIAGNOSTICS_ENABLED: "0"
     test:
       config: Debug
       targets:
         - ConceptsOnboardingTests
-      environmentVariables:
-        ORBIT_DIAGNOSTICS_ENABLED: "0"
     profile:
       config: Release
-      environmentVariables:
-        ORBIT_DIAGNOSTICS_ENABLED: "0"
     management:
       orderHint: 0
 
@@ -107,12 +107,8 @@ schemes:
         OrbitFamilyWatch: all
     run:
       config: Debug
-      environmentVariables:
-        ORBIT_DIAGNOSTICS_ENABLED: "0"
     profile:
       config: Release
-      environmentVariables:
-        ORBIT_DIAGNOSTICS_ENABLED: "0"
     management:
       orderHint: 2
 

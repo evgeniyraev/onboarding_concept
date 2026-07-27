@@ -355,7 +355,7 @@ final class WatchPairingSession: NSObject, ObservableObject {
     }
 
     private func record(_ message: String) {
-        guard DiagnosticsConfiguration.isEnabled else { return }
+        guard FeatureConfiguration.isDiagnosticsEnabled else { return }
 
         logger.info("\(message, privacy: .public)")
         let line = "\(Self.timeString())  \(message)"
