@@ -163,7 +163,7 @@ struct ParentDiscoveryView: View {
             }
 
             Label(
-                "Child iPhones use Bonjour. The paired Apple Watch uses WatchConnectivity.",
+                "Nearby child iPhones and Apple Watches use local discovery, even with different Apple IDs.",
                 systemImage: "hand.raised.fill"
             )
             .font(.caption)
@@ -339,7 +339,7 @@ struct ParentDiscoveryView: View {
                     Divider()
                         .padding(.vertical, 4)
 
-                    Text("Bonjour · child iPhone")
+                    Text("Bonjour · nearby children")
                         .font(.caption.bold())
                         .foregroundStyle(.indigo)
                     ForEach(Array(host.diagnostics.suffix(16).enumerated()), id: \.offset) { _, line in

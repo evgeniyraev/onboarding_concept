@@ -5,6 +5,7 @@ struct WatchChildPairingView: View {
     let onPaired: (FamilyColor) -> Void
 
     @EnvironmentObject private var watchPairing: WatchPairingSession
+    @StateObject private var pairing = BonjourChildBrowser()
 
     var body: some View {
         ScrollView {
@@ -43,7 +44,7 @@ struct WatchChildPairingView: View {
                             .font(.caption2.bold())
                             .foregroundStyle(.pink)
 
-                        ForEach(Array(watchPairing.diagnostics.suffix(7).enumerated()), id: \.offset) { _, line in
+                        ForEach(Array(pairing.diagnostics.suffix(7).enumerated()), id: \.offset) { _, line in
                             Text(line)
                                 .font(.system(size: 8, design: .monospaced))
                                 .foregroundStyle(.secondary)
@@ -54,7 +55,7 @@ struct WatchChildPairingView: View {
                     .background(.white.opacity(0.07), in: RoundedRectangle(cornerRadius: 10))
                 }
 
-                if case .failed = watchPairing.state {
+                if case .failed = pairing.status, !pairedWatchTransportConnected {
                     Button("Go back", action: onBack)
                         .font(.caption)
                 } else {
@@ -65,10 +66,17 @@ struct WatchChildPairingView: View {
             }
         }
         .onAppear {
+            pairing.start(displayName: "Child’s Apple Watch")
             watchPairing.beginChildPairing(displayName: "Child’s Apple Watch")
         }
         .onDisappear {
+            pairing.stop()
             watchPairing.endChildPairing()
+        }
+        .onChange(of: pairing.assignedColor) { _, color in
+            if let color {
+                onPaired(color)
+            }
         }
         .onChange(of: watchPairing.assignedColor) { _, color in
             if let color {
@@ -78,44 +86,46 @@ struct WatchChildPairingView: View {
     }
 
     private var statusTitle: String {
-        switch watchPairing.state {
-        case .unsupported:
-            "Pairing unavailable"
-        case .activating:
+        if pairedWatchTransportConnected {
+            return "Parent found!"
+        }
+
+        return switch pairing.status {
+        case .idle:
             "Starting…"
-        case .ready, .waitingForParent:
+        case .searching:
             "Finding parent"
-        case .parentFound, .childAvailable:
+        case .connecting, .connected:
             "Parent found!"
-        case .assigned:
-            "Color received!"
         case .failed:
             "Pairing needs help"
         }
     }
 
     private var statusMessage: String {
-        switch watchPairing.state {
-        case .unsupported:
-            "This Watch cannot open a paired-iPhone session."
-        case .activating:
-            "Opening the private path to the paired iPhone."
-        case .ready, .waitingForParent:
-            "Ask your parent to open Orbit Family on the paired iPhone and tap Add child."
-        case .parentFound, .childAvailable:
+        if pairedWatchTransportConnected {
+            return connectedMessage
+        }
+
+        return switch pairing.status {
+        case .idle:
+            "Getting the nearby connection ready."
+        case .searching:
+            "Ask your parent to open Orbit Family on their iPhone and tap Add child. The devices can use different Apple IDs."
+        case .connecting(let name):
+            "Connecting to \(name). Keep both apps open."
+        case .connected:
             connectedMessage
-        case .assigned(let color):
-            "\(color.name) is flying over now."
         case .failed(let message):
             message
         }
     }
 
     private var connectedMessage: String {
-        switch watchPairing.nearbyVerification {
+        switch activeNearbyVerification {
         case .checking:
             "Parent found. Checking distance—keep both devices nearby."
-        case .measured(let distance) where watchPairing.nearbyVerification.isConfirmed:
+        case .measured(let distance) where activeNearbyVerification.isConfirmed:
             "Nearby confirmed · \(distance.formatted(.number.precision(.fractionLength(1)))) m."
         case .measured(let distance):
             "Move closer · \(distance.formatted(.number.precision(.fractionLength(1)))) m away."
@@ -127,12 +137,36 @@ struct WatchChildPairingView: View {
     }
 
     private var statusSymbol: String {
-        switch watchPairing.state {
-        case .parentFound, .childAvailable, .assigned:
+        if pairedWatchTransportConnected {
+            return "person.2.fill"
+        }
+
+        return switch pairing.status {
+        case .connected:
             "person.2.fill"
-        case .failed, .unsupported:
+        case .connecting:
+            "arrow.trianglehead.2.clockwise.rotate.90"
+        case .failed:
             "exclamationmark"
         default: "dot.radiowaves.left.and.right"
+        }
+    }
+
+    private var pairedWatchTransportConnected: Bool {
+        switch watchPairing.state {
+        case .parentFound, .childAvailable, .assigned:
+            true
+        default:
+            false
+        }
+    }
+
+    private var activeNearbyVerification: NearbyVerificationStatus {
+        switch pairing.status {
+        case .connected:
+            pairing.nearbyVerification
+        default:
+            watchPairing.nearbyVerification
         }
     }
 }

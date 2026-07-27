@@ -1,4 +1,3 @@
-#if os(iOS)
 @preconcurrency import Network
 import Foundation
 import OSLog
@@ -13,6 +12,7 @@ private enum PairingNetworkConfiguration {
     }
 }
 
+#if os(iOS)
 enum ParentHostStatus: Equatable {
     case idle
     case searching
@@ -325,6 +325,7 @@ final class BonjourParentHost: ObservableObject {
         return "status=\(String(describing: path.status)), interfaces=[\(interfaces)], expensive=\(path.isExpensive), constrained=\(path.isConstrained)"
     }
 }
+#endif
 
 enum ChildBrowserStatus: Equatable {
     case idle
@@ -335,8 +336,8 @@ enum ChildBrowserStatus: Equatable {
 }
 
 /// Runs on a child iPhone or Apple Watch. The child searches for the parent and
-/// initiates the TCP flow, matching the onboarding language and avoiding an
-/// inbound TCP flow on watchOS.
+/// initiates the TCP flow, so pairing is independent of WatchConnectivity and
+/// the Apple IDs used by the two devices.
 final class BonjourChildBrowser: ObservableObject {
     @Published private(set) var status: ChildBrowserStatus = .idle
     @Published private(set) var assignedColor: FamilyColor?
@@ -643,4 +644,3 @@ final class BonjourChildBrowser: ObservableObject {
         return "status=\(String(describing: path.status)), interfaces=[\(interfaces)], expensive=\(path.isExpensive), constrained=\(path.isConstrained)"
     }
 }
-#endif

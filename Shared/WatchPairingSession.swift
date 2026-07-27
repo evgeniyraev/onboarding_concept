@@ -13,12 +13,10 @@ enum WatchPairingState: Equatable {
     case failed(String)
 }
 
-/// The supported transport between an iPhone app and its paired Apple Watch.
+/// A fallback transport between an iPhone app and its own paired Apple Watch.
 ///
-/// watchOS can browse Bonjour services, but general-purpose watch apps are not
-/// allowed to open the low-level TCP flow behind a Bonjour result. WatchConnectivity
-/// supplies the paired-device transport and queues the latest state when one app
-/// is temporarily unreachable.
+/// Cross-account child pairing uses `BonjourChildBrowser`; WatchConnectivity
+/// remains available for the paired-device path and its queued state delivery.
 final class WatchPairingSession: NSObject, ObservableObject {
     static let shared = WatchPairingSession()
 
